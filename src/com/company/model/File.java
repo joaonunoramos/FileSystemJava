@@ -1,11 +1,17 @@
-package com.company;
+package com.company.model;
 
+import com.company.interfaces.IDirectory;
+import com.company.interfaces.IFile;
+import com.company.interfaces.IOwner;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class File implements IFile {
 
     private String name;
+    // in bits
     private int size;
     private Date creationDate;
     private Date lastModifiedDate;
@@ -15,16 +21,20 @@ public class File implements IFile {
     private boolean canRead;
     private boolean canWrite;
 
-
-    public File(){
+    public File(IOwner owner, IDirectory directory) {
+        this.owner = owner;
+        this.directory = directory;
+        this.name = "Default name";
+        this.size = 0;
+        this.creationDate = new Date(System.currentTimeMillis());
+        this.content = new ArrayList<>();
+        this.canRead = true;
+        this.canWrite = true;
     }
 
+    @Override
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getSize() {
@@ -90,4 +100,46 @@ public class File implements IFile {
     public void setCanWrite(boolean canWrite) {
         this.canWrite = canWrite;
     }
+
+
+    @Override
+    public void changeName(String newName) {
+        if(newName.length() == 0 || newName == null){
+            throw new IllegalArgumentException("New name of file can't be null or empty");
+        }
+        this.name = newName;
+    }
+
+    @Override
+    public void updateModifyDate() {
+        this.lastModifiedDate = new Date(System.currentTimeMillis());
+    }
+
+    @Override
+    public void updateDirectory(IDirectory newDirectory) {
+        if(newDirectory == null){
+            throw new IllegalArgumentException("New directory is null");
+        }
+        setDirectory(newDirectory);
+    }
+
+    @Override
+    public void changeOwner(IOwner newOwner) {
+        if(newOwner == null){
+            throw new IllegalArgumentException("Owner of file can't be null");
+        }
+        setOwner(newOwner);
+    }
+
+    @Override
+    public void changeReadPermission() {
+
+    }
+
+    @Override
+    public void changeWritePermission() {
+
+    }
+
+
 }
